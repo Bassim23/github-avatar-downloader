@@ -1,4 +1,5 @@
 var request = require('request');
+var fs = require('fs');
 
 var GITHUB_USER = "Bassim23";
 var GITHUB_TOKEN = "08b1711fcfaea2bb1cdce05f61f6fbcd1e584cfc";
@@ -21,13 +22,30 @@ function getRepoContributors(repoOwner, repoName, cb) {
       return false;
     }
     let data = JSON.parse(body);
+
     cb(null, data);
   });
 }
-  getRepoContributors("jquery", "jquery", function(err, result) {
 
-  const avatarUrls = result.map(item => item.avatar_url)
-  console.log(avatarUrls);
-});
+function avatarList(err, result) {
+  result.forEach(function(item){
+    downloadImageByURL(item.avatar_url, "./avatars/"+item.login+".jpg");
+  })
+}
 
-console.log('Welcome to the GitHub Avatar Downloader!');
+function downloadImageByURL(url, filePath) {
+   request.get(url)
+       .on('error', function (err) {
+         throw err;
+       })
+       .on('response', function (response) {
+        if (response.statusCode === 200) {
+         console.log('Response Status Message: ', response.statusCode, response.headers['content-type'], '\n' + "Download completed.")
+        } else {
+          console.log("Download failed", response.statusCode);
+        }
+       })
+       .pipe(fs.createWriteStream(filePath));
+}
+
+getRepoContributors("jquery", "jquery", avatarList);
