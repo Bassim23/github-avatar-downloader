@@ -49,4 +49,8 @@ function downloadImageByURL(url, filePath) {
        .pipe(fs.createWriteStream(filePath));
 }
 
-getRepoContributors(repoOwner, repoName, avatarList);
+if (repoOwner && repoName) {
+  getRepoContributors(repoOwner, repoName, avatarList);
+} else {
+  console.log("You must supply a repo name and repo owner!");
+}
