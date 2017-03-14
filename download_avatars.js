@@ -2,6 +2,8 @@ var request = require('request');
 var fs = require('fs');
 var GITHUB_USER = "Bassim23";
 var GITHUB_TOKEN = "08b1711fcfaea2bb1cdce05f61f6fbcd1e584cfc";
+var repoOwner = process.argv[2];
+var repoName = process.argv[3];
 
 function getRepoContributors(repoOwner, repoName, cb) {
   var requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
@@ -47,4 +49,4 @@ function downloadImageByURL(url, filePath) {
        .pipe(fs.createWriteStream(filePath));
 }
 
-getRepoContributors("jquery", "jquery", avatarList);
+getRepoContributors(repoOwner, repoName, avatarList);
